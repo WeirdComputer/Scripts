@@ -9,11 +9,20 @@ SED=/usr/bin/sed
 CAT=/usr/bin/cat
 SERVICE=/usr/sbin/service
 CERTBOT=/usr/bin/certbot
+GETSSL=false
 
 ASITES=/etc/nginx/sites-available/
 ESITES=/etc/nginx/sites-enabled/
 DCONFFILE=${ASITES}${DOMAIN}.conf
 DCONFLINKFILE=${ESITES}${DOMAIN}.conf
+
+while getopts ":s" opt; do
+  case ${opt} in
+    s )
+      GETSSL=true
+      ;;
+  esac
+done
 
 echo "Adding domain $DOMAIN to the server"
 
@@ -33,4 +42,9 @@ echo "$DCONFLINKFILE linked to $DCONFFILE"
 
 $SERVICE nginx reload && echo "Nginx service reloaded"
 
-$CERTBOT --nginx -d $DOMAIN
+
+if [ $GETSSL == true ]
+	then
+		$CERTBOT --nginx -d $DOMAIN
+fi
+
