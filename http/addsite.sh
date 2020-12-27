@@ -10,16 +10,20 @@ CAT=/usr/bin/cat
 SERVICE=/usr/sbin/service
 CERTBOT=/usr/bin/certbot
 GETSSL=false
+ENABLEDOMAIN=false
 
 ASITES=/etc/nginx/sites-available/
 ESITES=/etc/nginx/sites-enabled/
 DCONFFILE=${ASITES}${DOMAIN}.conf
 DCONFLINKFILE=${ESITES}${DOMAIN}.conf
 
-while getopts ":s" opt; do
+while getopts ":es" opt; do
   case ${opt} in
     s )
       GETSSL=true
+      ;;
+    e )
+      ENABLEDOMAIN=true
       ;;
   esac
 done
@@ -36,15 +40,15 @@ $CAT ${WWWSKEL}example.com.conf \
 
 echo "Created configuration file $DCONFFILE from template"
 
-$LN -s $DCONFFILE $DCONFLINKFILE 
-
-echo "$DCONFLINKFILE linked to $DCONFFILE"
-
-$SERVICE nginx reload && echo "Nginx service reloaded"
-
+if [ $ENABLEDOMAIN == true ]
+	then
+		$LN -s $DCONFFILE $DCONFLINKFILE 
+		echo "$DCONFLINKFILE linked to $DCONFFILE"
+		$SERVICE nginx reload && echo "Nginx service reloaded"
+fi
 
 if [ $GETSSL == true ]
 	then
-		$CERTBOT --nginx -d $DOMAIN
+		$CERTBOT --nginx --redirect -d $DOMAIN
 fi
 

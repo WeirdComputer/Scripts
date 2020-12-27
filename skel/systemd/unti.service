@@ -1,0 +1,14 @@
+[Unit]
+Description=$SERVICE Daemon Service
+After=network.target
+
+[Service]
+User=$USER
+Group=$USER
+Type=simple
+Restart=always
+ExecStart=/usr/bin/$SERVICE
+ExecStop=/usr/bin/killall -w $SERVICE
+
+[Install]
+WantedBy=multi-user.target
