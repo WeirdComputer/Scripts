@@ -49,6 +49,6 @@ fi
 
 if [ $GETSSL == true ]
 	then
-		$CERTBOT --nginx --redirect -d $DOMAIN
+		$CERTBOT --nginx -d $DOMAIN
 fi
 

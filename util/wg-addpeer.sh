@@ -1,0 +1,1 @@
+wg set wg0 peer PUBKEY allowed-ips 10.20.30.$ip/32
